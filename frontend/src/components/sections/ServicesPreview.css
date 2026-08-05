@@ -1,0 +1,229 @@
+/* ============================================================
+   Services Preview Section
+   ============================================================ */
+
+.services {
+  background: var(--bg-secondary);
+  position: relative;
+}
+
+/* ── Grid ── */
+.services__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .services__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .services__grid {
+    gap: var(--space-5);
+  }
+}
+
+/* ── Card ── */
+.services__card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow: hidden;
+  transition:
+    transform var(--transition-slow),
+    border-color var(--transition-slow),
+    box-shadow var(--transition-slow);
+  will-change: transform;
+}
+
+.services__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Background glow on hover */
+.services__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+}
+
+.services__card:hover::before {
+  opacity: 1;
+}
+
+/* ── Accent Variants (top border + icon color) ── */
+.accent-gold .services__card::before,
+.services__card.accent-gold::before {
+  background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+}
+.services__card.accent-gold:hover {
+  border-color: rgba(245, 158, 11, 0.25);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(245, 158, 11, 0.08);
+}
+
+.services__card.accent-blue:hover {
+  border-color: rgba(96, 165, 250, 0.20);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(96, 165, 250, 0.06);
+}
+.services__card.accent-blue::before {
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.6), transparent);
+}
+
+.services__card.accent-green:hover {
+  border-color: rgba(52, 211, 153, 0.20);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(52, 211, 153, 0.06);
+}
+.services__card.accent-green::before {
+  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.6), transparent);
+}
+
+.services__card.accent-purple:hover {
+  border-color: rgba(167, 139, 250, 0.20);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(167, 139, 250, 0.06);
+}
+.services__card.accent-purple::before {
+  background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.6), transparent);
+}
+
+/* ── Card Header ── */
+.services__card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* ── Icon ── */
+.services__icon-wrap {
+  width: 48px;
+  height: 48px;
+  background: var(--gold-glow-xs);
+  border: 1px solid var(--border-gold-sm);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.services__icon-wrap svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Icon colors per accent */
+.accent-gold  .services__icon-wrap { color: var(--gold-400); background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.18); }
+.accent-blue  .services__icon-wrap { color: #60A5FA;          background: rgba(96,165,250,0.07);  border-color: rgba(96,165,250,0.18); }
+.accent-green .services__icon-wrap { color: #34D399;          background: rgba(52,211,153,0.07);  border-color: rgba(52,211,153,0.18); }
+.accent-purple .services__icon-wrap { color: #A78BFA;         background: rgba(167,139,250,0.07); border-color: rgba(167,139,250,0.18); }
+
+/* ── Badge ── */
+.services__badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Card body ── */
+.services__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.services__subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.services__card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+.services__card-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Feature list ── */
+.services__features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2) var(--space-3);
+  flex: 1;
+}
+
+.services__feature-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.services__feature-item svg {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+/* ── Card CTA ── */
+.services__card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  transition: color var(--transition-fast), gap var(--transition-fast);
+}
+
+.services__card-cta:hover {
+  color: var(--text-primary);
+  gap: var(--space-3);
+}
+
+.accent-gold  .services__card-cta:hover { color: var(--gold-400); }
+.accent-blue  .services__card-cta:hover { color: #60A5FA; }
+.accent-green .services__card-cta:hover { color: #34D399; }
+.accent-purple .services__card-cta:hover { color: #A78BFA; }
+
+/* Mobile */
+@media (max-width: 639px) {
+  .services__card { padding: var(--space-5); }
+  .services__features { grid-template-columns: 1fr; }
+}

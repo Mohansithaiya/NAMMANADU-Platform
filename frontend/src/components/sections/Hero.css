@@ -1,0 +1,451 @@
+/* ============================================================
+   Hero Section — Full-screen layout with PNG Tamil Nadu map
+   ============================================================ */
+
+/* ── Container ── */
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 64px; /* navbar offset */
+}
+
+/* ── Black Fade-In Overlay (Page Load) ── */
+.hero__black-fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  z-index: 100;
+  pointer-events: none;
+  animation: fadeOutBlack 1.2s ease-out 0.1s both;
+}
+
+@keyframes fadeOutBlack {
+  from { opacity: 1; }
+  to   { opacity: 0; visibility: hidden; }
+}
+
+/* ── Background gradient ── */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 65% at 75% 50%, rgba(245, 166, 35, 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 70% at 20% 30%, rgba(10, 14, 28, 0.90) 0%, transparent 55%),
+    linear-gradient(160deg, #06080D 0%, #080A0F 45%, #0A0D14 100%);
+  z-index: 0;
+}
+
+/* ── Canvas ── */
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Subtle grid overlay for depth ── */
+.hero__grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO CONTENT & MAP WRAPPER
+────────────────────────────────────────────────────────────── */
+.hero__content-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-12);
+  gap: var(--space-8);
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-5);
+  max-width: 680px;
+  width: 100%;
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO CHILD STAGGERED REVEAL
+────────────────────────────────────────────────────────────── */
+.hero__badge-wrapper,
+.hero__title,
+.hero__subtitle,
+.hero__tamil,
+.hero__ctas,
+.hero__trust {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.70s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0.8s) both;
+}
+
+.hero__badge-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Title ── */
+.hero__title {
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.0;
+  color: var(--text-primary);
+  background: linear-gradient(
+    135deg,
+    #FFFFFF 0%,
+    #FFFFFF 35%,
+    #F59E0B 55%,
+    #FFFFFF 70%,
+    #FFFFFF 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    fadeInUp 0.70s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0.8s) both,
+    shimmer 6s linear 2s infinite;
+}
+
+/* ── Subtitle ── */
+.hero__subtitle {
+  font-size: clamp(0.95rem, 2.2vw, 1.12rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 50ch;
+}
+
+/* ── Tamil line ── */
+.hero__tamil {
+  font-family: var(--font-tamil);
+  font-size: clamp(0.85rem, 2vw, 1.0rem);
+  font-weight: 400;
+  color: var(--text-gold);
+  letter-spacing: 0.02em;
+}
+
+/* ── CTA Buttons ── */
+.hero__ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.hero__btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px 28px;
+  background: var(--gold-400);
+  color: #000;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition:
+    background-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+  will-change: transform;
+}
+
+.hero__btn-primary:hover {
+  background-color: var(--gold-300);
+  box-shadow: 0 0 28px rgba(245, 158, 11, 0.45), 0 8px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+.hero__btn-primary:active {
+  transform: translateY(0);
+}
+
+.hero__btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 13px 26px;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition:
+    border-color var(--transition-base),
+    color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+.hero__btn-secondary:hover {
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+  background-color: var(--gold-glow-xs);
+}
+
+/* ── Trust row ── */
+.hero__trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.hero__trust-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--gold-400);
+  border-radius: var(--radius-full);
+  animation: pulseDot 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.hero__trust-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ────────────────────────────────────────────────────────────
+   TAMIL NADU MAP PNG CONTAINER & IMAGE ANIMATION
+────────────────────────────────────────────────────────────── */
+.hero__map-container {
+  width: 75%;
+  max-width: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+.hero__map-img {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center center;
+  animation:
+    mapImageEntry 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
+    mapImageBreathing 8s ease-in-out 2.8s infinite;
+  will-change: transform, filter, opacity;
+}
+
+/* Entrance Zoom + Glow Expansion */
+@keyframes mapImageEntry {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+    filter: brightness(0.85) drop-shadow(0 0 10px rgba(245, 166, 35, 0.2));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.0);
+    filter: brightness(1.1) drop-shadow(0 0 30px rgba(245, 166, 35, 0.5));
+  }
+}
+
+/* Ambient Slow Breathing + Gentle Floating */
+@keyframes mapImageBreathing {
+  0%, 100% {
+    transform: scale(1.00) translateY(0);
+    filter: brightness(1.0) drop-shadow(0 0 25px rgba(245, 166, 35, 0.35));
+  }
+  50% {
+    transform: scale(1.02) translateY(-3px);
+    filter: brightness(1.18) drop-shadow(0 0 45px rgba(245, 166, 35, 0.65));
+  }
+}
+
+/* ── Scroll Indicator ── */
+.hero__scroll-indicator {
+  position: absolute;
+  bottom: var(--space-8);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out var(--delay, 1.6s) both;
+}
+
+.hero__scroll-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 40px;
+  background: var(--border-default);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__scroll-dot {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 3px;
+  height: 12px;
+  background: var(--gold-400);
+  border-radius: 2px;
+  animation: scrollBounce 1.8s ease-in-out infinite;
+}
+
+/* ====================================================================
+   RESPONSIVE BREAKPOINTS
+==================================================================== */
+
+/* Mobile (<640px): Map below hero text, width 75%, centered */
+@media (max-width: 639px) {
+  .hero { padding-top: 56px; }
+
+  .hero__content-wrapper {
+    gap: var(--space-6);
+  }
+
+  .hero__btn-primary,
+  .hero__btn-secondary {
+    padding: 13px 22px;
+    font-size: 14px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero__ctas {
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+  }
+
+  .hero__scroll-indicator {
+    display: none;
+  }
+}
+
+/* Tablet (640px – 1023px): Slightly reduced map size */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero__map-container {
+    width: 60%;
+    max-width: 380px;
+  }
+
+  .hero__content {
+    max-width: 600px;
+  }
+
+  .hero__title {
+    font-size: clamp(3.2rem, 7vw, 4.8rem);
+  }
+}
+
+/* Laptop / Desktop (1024px+): Hero text on left, Map on right (~45% width) */
+@media (min-width: 1024px) {
+  .hero__content-wrapper {
+    padding-top: 0;
+    padding-bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: calc(100dvh - 64px);
+    gap: var(--space-8);
+  }
+
+  /* Left Column: Hero Text */
+  .hero__content {
+    align-items: flex-start;
+    text-align: left;
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin: 0;
+  }
+
+  .hero__badge-wrapper,
+  .hero__ctas,
+  .hero__trust {
+    justify-content: flex-start;
+  }
+
+  .hero__subtitle {
+    max-width: 44ch;
+  }
+
+  .hero__ctas {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .hero__btn-primary,
+  .hero__btn-secondary {
+    width: auto;
+  }
+
+  /* Right Column: Map Image */
+  .hero__map-container {
+    flex: 0 0 45%;
+    max-width: 45%;
+    width: 45%;
+    margin: 0;
+  }
+
+  .hero__map-img {
+    max-height: 75vh;
+  }
+}
+
+/* Large Desktop (1280px+) */
+@media (min-width: 1280px) {
+  .hero__content {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+
+  .hero__map-container {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+
+  .hero__title {
+    font-size: clamp(4.5rem, 5.5vw, 6rem);
+  }
+}

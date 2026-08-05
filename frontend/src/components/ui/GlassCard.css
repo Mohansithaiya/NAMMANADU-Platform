@@ -1,0 +1,44 @@
+/* ============================================================
+   GlassCard — Glassmorphism card
+   ============================================================ */
+
+.glass-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--space-6);
+  overflow: hidden;
+}
+
+/* Optional gold left-border accent */
+.glass-card--accent {
+  border-left: 2px solid var(--gold-400);
+}
+
+/* Hover lift + glow */
+.glass-card--hoverable {
+  transition:
+    transform var(--transition-slow),
+    border-color var(--transition-slow),
+    box-shadow var(--transition-slow);
+  will-change: transform;
+}
+
+.glass-card--hoverable:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-gold);
+  box-shadow:
+    var(--shadow-lg),
+    var(--shadow-gold-sm);
+}
+
+/* Mobile adjustments */
+@media (max-width: 639px) {
+  .glass-card {
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+  }
+}

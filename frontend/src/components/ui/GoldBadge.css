@@ -1,0 +1,41 @@
+/* ============================================================
+   GoldBadge — Pill label with gold accent
+   ============================================================ */
+
+.gold-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: var(--gold-glow-sm);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  color: var(--text-gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.gold-badge--lg {
+  padding: 7px 18px;
+  font-size: 12px;
+}
+
+.gold-badge--sm {
+  padding: 3px 10px;
+  font-size: 10px;
+}
+
+.gold-badge__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.gold-badge__text {
+  line-height: 1;
+}
