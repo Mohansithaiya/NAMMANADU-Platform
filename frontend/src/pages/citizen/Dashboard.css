@@ -1,0 +1,155 @@
+/* ============================================================
+   NAMMANADU Dashboard — Shared base styles
+   ============================================================ */
+
+.dashboard-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* ── Header ── */
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: rgba(8, 10, 15, 0.85);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dashboard-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-brand {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-gold);
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dashboard-role-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--gold-glow-md);
+  color: var(--gold-300);
+  border: 1px solid var(--border-gold-sm);
+}
+
+.dashboard-role-admin {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.dashboard-role-worker {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86EFAC;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.dashboard-role-super {
+  background: rgba(168, 85, 247, 0.15);
+  color: #D8B4FE;
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.dashboard-user-name {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-logout {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dashboard-logout:hover {
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* ── Main ── */
+.dashboard-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+}
+
+.dashboard-welcome {
+  margin-bottom: var(--space-8);
+}
+
+.dashboard-welcome h1 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  margin-bottom: var(--space-2);
+}
+
+.dashboard-welcome p {
+  color: var(--text-tertiary);
+  font-size: 0.95rem;
+}
+
+/* ── Stat Grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+}
+
+.dashboard-stat-card {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: border-color var(--transition-fast);
+}
+
+.dashboard-stat-card:hover {
+  border-color: var(--border-gold-sm);
+}
+
+.dashboard-stat-card h3 {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+.stat-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
