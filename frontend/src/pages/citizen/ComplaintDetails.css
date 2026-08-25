@@ -1,0 +1,268 @@
+.complaint-details-page {
+  min-height: 100vh;
+}
+
+.complaint-details-back {
+  display: inline-flex;
+  margin-bottom: var(--space-5);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  transition: color var(--transition-fast);
+}
+
+.complaint-details-back:hover {
+  color: var(--text-gold);
+}
+
+.complaint-details-state {
+  min-height: 220px;
+}
+
+.complaint-details-card {
+  overflow: hidden;
+  background: var(--bg-card);
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.complaint-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: clamp(var(--space-5), 5vw, var(--space-8));
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.complaint-details-header h1 {
+  max-width: 720px;
+  margin: 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.25;
+}
+
+.complaint-details-header .complaint-status {
+  margin-top: 0.2rem;
+}
+
+.complaint-progress-panel {
+  padding: clamp(var(--space-5), 5vw, var(--space-8));
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.02));
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.complaint-progress-rejected {
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.complaint-details-section {
+  padding: clamp(var(--space-5), 5vw, var(--space-8));
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.complaint-details-section:last-child {
+  border-bottom: 0;
+}
+
+.complaint-details-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.complaint-details-section-heading h2,
+.complaint-details-section > h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.complaint-details-eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--gold-300);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.complaint-progress-date {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  font-size: 0.78rem;
+}
+
+.complaint-progress-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.complaint-progress-steps::before {
+  content: "";
+  position: absolute;
+  top: 0.8rem;
+  right: 10%;
+  left: 10%;
+  height: 1px;
+  background: var(--border-default);
+}
+
+.complaint-progress-steps li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.complaint-progress-steps li.is-complete {
+  color: var(--text-secondary);
+}
+
+.complaint-progress-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  background: var(--bg-card-solid);
+  color: var(--text-tertiary);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.complaint-progress-steps li.is-complete .complaint-progress-marker {
+  border-color: var(--gold-400);
+  background: var(--gold-400);
+  color: var(--bg-primary);
+}
+
+.complaint-progress-marker.is-current {
+  box-shadow: 0 0 0 4px var(--gold-glow-sm);
+}
+
+.complaint-progress-message {
+  margin: 0;
+  color: #FCA5A5;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.complaint-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.complaint-detail-grid div {
+  min-width: 0;
+}
+
+.complaint-detail-grid span,
+.complaint-resolution-note > span {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.complaint-detail-grid strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.complaint-detail-full-width {
+  grid-column: 1 / -1;
+}
+
+.complaint-description-section > h2 {
+  margin-bottom: var(--space-4);
+}
+
+.complaint-description-section > p:last-child {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.complaint-assigned-value {
+  margin: var(--space-3) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.complaint-resolution-note {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border-left: 3px solid var(--gold-400);
+  background: var(--gold-glow-sm);
+}
+
+.complaint-resolution-note p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .complaint-details-header,
+  .complaint-details-section-heading {
+    flex-direction: column;
+  }
+
+  .complaint-details-header .complaint-status,
+  .complaint-progress-date {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .complaint-progress-steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .complaint-progress-steps::before {
+    top: 0.8rem;
+    right: auto;
+    bottom: 0.8rem;
+    left: 0.8rem;
+    width: 1px;
+    height: auto;
+  }
+
+  .complaint-progress-steps li {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .complaint-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .complaint-detail-full-width {
+    grid-column: auto;
+  }
+}

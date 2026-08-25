@@ -280,9 +280,18 @@ export default function Dashboard() {
                   >
                     <div className="complaint-card-header">
                       <div>
-                        <span className="complaint-tracking-id">
-                          {complaint.tracking_id || "No tracking ID"}
-                        </span>
+                        {complaint._id ? (
+                          <Link
+                            to={`/citizen/complaints/${complaint._id}`}
+                            className="complaint-tracking-link"
+                          >
+                            {complaint.tracking_id || "View complaint details"}
+                          </Link>
+                        ) : (
+                          <span className="complaint-tracking-id">
+                            {complaint.tracking_id || "No tracking ID"}
+                          </span>
+                        )}
 
                         <h3>{title}</h3>
                       </div>

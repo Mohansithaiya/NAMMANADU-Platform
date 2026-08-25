@@ -223,13 +223,19 @@
   gap: var(--space-4);
 }
 
-.complaint-tracking-id {
+.complaint-tracking-id,
+.complaint-tracking-link {
   display: block;
   margin-bottom: var(--space-2);
   color: var(--text-gold);
   font-family: var(--font-mono, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.04em;
+}
+
+.complaint-tracking-link:hover {
+  color: var(--gold-300);
+  text-decoration: underline;
 }
 
 .complaint-card h3 {
