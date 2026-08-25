@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import validator from "validator";
 import User from "../models/User.js";
 import { AppError } from "../middleware/errorHandler.js";

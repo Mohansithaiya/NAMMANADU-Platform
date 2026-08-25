@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getDashboardPath } from "../../utils/dashboardRoutes";
 import "./Auth.css";
 
 const DISTRICTS = [
@@ -13,6 +14,12 @@ const DISTRICTS = [
   "Tiruppur", "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore",
   "Viluppuram", "Virudhunagar",
 ];
+
+function getRegistrationError(error) {
+  if (error.response?.data?.message) return error.response.data.message;
+  if (error.request) return "Unable to reach NAMMANADU. Please check your connection and try again.";
+  return "Registration failed. Please try again.";
+}
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -29,31 +36,48 @@ export default function Register() {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (event) => {
+    setForm((previous) => ({ ...previous, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
+    const fullName = form.full_name.trim();
+    const email = form.email.trim().toLowerCase();
+    const password = form.password;
+
+    if (!fullName || !email || !password) {
+      setError("Full name, email, and password are required.");
       return;
     }
-    if (form.password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    if (password !== form.confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
     setSubmitting(true);
     try {
-      const payload = { ...form };
-      delete payload.confirmPassword;
-      const user = await signup(payload);
-      navigate(user.role === "citizen" ? "/citizen/dashboard" : "/");
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      const user = await signup({
+        full_name: fullName,
+        email,
+        password,
+        phone_number: form.phone_number.trim(),
+        district: form.district,
+        constituency: form.constituency.trim(),
+      });
+      navigate(getDashboardPath(user.role), { replace: true });
+    } catch (requestError) {
+      setError(getRegistrationError(requestError));
     } finally {
       setSubmitting(false);
     }
@@ -68,10 +92,10 @@ export default function Register() {
           <p className="auth-tagline">நம்ம நாடு — Create Your Account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
           <h2>Sign Up</h2>
 
-          {error && <div className="auth-error">{error}</div>}
+          {error && <div className="auth-error" role="alert">{error}</div>}
 
           <div className="form-row">
             <div className="form-group">
@@ -83,6 +107,7 @@ export default function Register() {
                 value={form.full_name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
+                autoComplete="name"
                 required
               />
             </div>
@@ -95,6 +120,7 @@ export default function Register() {
                 value={form.phone_number}
                 onChange={handleChange}
                 placeholder="+91 XXXXX XXXXX"
+                autoComplete="tel"
               />
             </div>
           </div>
@@ -108,6 +134,7 @@ export default function Register() {
               value={form.email}
               onChange={handleChange}
               placeholder="you@example.com"
+              autoComplete="email"
               required
             />
           </div>
@@ -122,6 +149,8 @@ export default function Register() {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="Min 6 characters"
+                autoComplete="new-password"
+                minLength={6}
                 required
               />
             </div>
@@ -134,6 +163,8 @@ export default function Register() {
                 value={form.confirmPassword}
                 onChange={handleChange}
                 placeholder="Re-enter password"
+                autoComplete="new-password"
+                minLength={6}
                 required
               />
             </div>
@@ -149,8 +180,8 @@ export default function Register() {
                 onChange={handleChange}
               >
                 <option value="">Select District</option>
-                {DISTRICTS.map((d) => (
-                  <option key={d} value={d}>{d}</option>
+                {DISTRICTS.map((district) => (
+                  <option key={district} value={district}>{district}</option>
                 ))}
               </select>
             </div>
@@ -163,6 +194,7 @@ export default function Register() {
                 value={form.constituency}
                 onChange={handleChange}
                 placeholder="Your constituency"
+                autoComplete="address-level2"
               />
             </div>
           </div>
