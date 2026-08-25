@@ -8,6 +8,7 @@ import App from "../App";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import CitizenDashboard from "../pages/citizen/Dashboard";
+import FileComplaint from "../pages/citizen/FileComplaint";
 import AdminDashboard from "../pages/admin/Dashboard";
 import WorkerDashboard from "../pages/worker/Dashboard";
 import SuperAdminDashboard from "../pages/superadmin/Dashboard";
@@ -40,6 +41,14 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute allowedRoles={["citizen"]}>
                 <CitizenDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/citizen/complaints/new"
+            element={
+              <ProtectedRoute allowedRoles={["citizen"]}>
+                <FileComplaint />
               </ProtectedRoute>
             }
           />

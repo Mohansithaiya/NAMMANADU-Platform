@@ -89,6 +89,7 @@ export default function Dashboard() {
       const responseData = response?.data;
 
       const complaintList =
+        responseData?.data?.complaints ||
         responseData?.complaints ||
         responseData?.items ||
         (Array.isArray(responseData) ? responseData : []);
@@ -107,7 +108,11 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    fetchComplaints();
+    const requestId = window.setTimeout(() => {
+      fetchComplaints();
+    }, 0);
+
+    return () => window.clearTimeout(requestId);
   }, [fetchComplaints]);
 
   const stats = useMemo(() => {
@@ -186,6 +191,9 @@ export default function Dashboard() {
         <div className="dashboard-welcome">
           <h1>Welcome, {user?.full_name}!</h1>
           <p>Track your civic complaints and their progress.</p>
+          <Link to="/citizen/complaints/new" className="dashboard-primary-action">
+            File a Complaint
+          </Link>
         </div>
 
         {/* Statistics */}

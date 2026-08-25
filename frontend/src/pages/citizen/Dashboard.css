@@ -153,3 +153,264 @@
   font-weight: 600;
   color: var(--text-secondary);
 }
+
+
+.dashboard-primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-4);
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--gold-400);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
+  color: var(--bg-primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.dashboard-primary-action:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-gold-md);
+}
+
+/* ── Complaint section ── */
+.complaints-section {
+  margin-top: var(--space-8);
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.section-header h2 {
+  margin-bottom: var(--space-1);
+  font-size: 1.35rem;
+}
+
+.section-header p {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+.complaints-list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.complaint-card {
+  padding: var(--space-5);
+  background: var(--bg-card);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.complaint-card:hover {
+  border-color: var(--border-gold-sm);
+  transform: translateY(-1px);
+}
+
+.complaint-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.complaint-tracking-id {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--text-gold);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.complaint-card h3 {
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.complaint-description {
+  margin: var(--space-4) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.complaint-status {
+  flex-shrink: 0;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border-gold-sm);
+  border-radius: var(--radius-full);
+  color: var(--gold-300);
+  background: var(--gold-glow-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.complaint-status.status-progress {
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.32);
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.complaint-status.status-resolved {
+  color: #86EFAC;
+  border-color: rgba(34, 197, 94, 0.32);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.complaint-status.status-rejected {
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.32);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.complaint-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.complaint-meta div {
+  min-width: 0;
+}
+
+.complaint-meta span {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.complaint-meta strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.dashboard-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: var(--space-6);
+  color: var(--text-tertiary);
+  text-align: center;
+  background: var(--bg-card);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.dashboard-error {
+  flex-direction: column;
+  gap: var(--space-4);
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.dashboard-error p,
+.dashboard-empty p {
+  margin: 0;
+}
+
+.dashboard-empty {
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dashboard-empty h3 {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.dashboard-retry {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border-gold-sm);
+  border-radius: var(--radius-sm);
+  color: var(--text-gold);
+  background: var(--gold-glow-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ── Reward card ── */
+.reward-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  padding: var(--space-5);
+  background: var(--bg-card);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.reward-card h2 {
+  margin-bottom: var(--space-1);
+  font-size: 1.1rem;
+}
+
+.reward-card p {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+.reward-number {
+  color: var(--text-gold);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .dashboard-primary-action {
+    width: 100%;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .complaint-card {
+    padding: var(--space-4);
+  }
+
+  .complaint-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .complaint-card-header {
+    flex-direction: column;
+  }
+
+  .complaint-status {
+    align-self: flex-start;
+  }
+
+  .reward-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
