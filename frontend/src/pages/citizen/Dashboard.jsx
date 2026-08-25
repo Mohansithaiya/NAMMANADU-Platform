@@ -50,6 +50,23 @@ const formatDate = (date) => {
   });
 };
 
+const STATUS_FILTER_OPTIONS = [
+  "submitted",
+  "under_review",
+  "assigned",
+  "in_progress",
+  "resolved",
+  "rejected",
+];
+
+const getComplaintStatus = (complaint) =>
+  String(complaint.status || complaint.complaint_status || "")
+    .toLowerCase()
+    .trim();
+
+const getComplaintTitle = (complaint) =>
+  complaint.title || complaint.complaint_title || "";
+
 const getStatusClass = (status) => {
   const normalized = String(status || "").toLowerCase().trim();
 
@@ -78,6 +95,9 @@ export default function Dashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
   const fetchComplaints = useCallback(async () => {
     try {
@@ -160,6 +180,48 @@ export default function Dashboard() {
     };
   }, [complaints]);
 
+  const categories = useMemo(() => {
+    return Array.from(
+      new Set(
+        complaints
+          .map((complaint) => String(complaint.category || "").trim())
+          .filter(Boolean)
+      )
+    ).sort((first, second) => first.localeCompare(second));
+  }, [complaints]);
+
+  const filteredComplaints = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return complaints.filter((complaint) => {
+      const searchableFields = [
+        complaint.tracking_id,
+        getComplaintTitle(complaint),
+        complaint.category,
+      ];
+      const matchesSearch =
+        !normalizedSearch ||
+        searchableFields.some((field) =>
+          String(field || "").toLowerCase().includes(normalizedSearch)
+        );
+      const matchesStatus =
+        !statusFilter || getComplaintStatus(complaint) === statusFilter;
+      const matchesCategory =
+        !categoryFilter ||
+        String(complaint.category || "").trim() === categoryFilter;
+
+      return matchesSearch && matchesStatus && matchesCategory;
+    });
+  }, [categoryFilter, complaints, searchTerm, statusFilter]);
+
+  const hasActiveFilters = Boolean(searchTerm || statusFilter || categoryFilter);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("");
+    setCategoryFilter("");
+  };
+
   return (
     <div className="dashboard-page">
       <header className="dashboard-header">
@@ -228,6 +290,58 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {!loading && !error && complaints.length > 0 && (
+            <div className="complaint-filters" aria-label="Search and filter complaints">
+              <div className="complaint-search-field">
+                <label htmlFor="complaint-search">Search complaints</label>
+                <input
+                  id="complaint-search"
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search by tracking ID, title, or category"
+                />
+              </div>
+
+              <div className="complaint-filter-field">
+                <label htmlFor="complaint-status-filter">Status</label>
+                <select
+                  id="complaint-status-filter"
+                  value={statusFilter}
+                  onChange={(event) => setStatusFilter(event.target.value)}
+                >
+                  <option value="">All statuses</option>
+                  {STATUS_FILTER_OPTIONS.map((status) => (
+                    <option key={status} value={status}>{formatStatus(status)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="complaint-filter-field">
+                <label htmlFor="complaint-category-filter">Category</label>
+                <select
+                  id="complaint-category-filter"
+                  value={categoryFilter}
+                  onChange={(event) => setCategoryFilter(event.target.value)}
+                >
+                  <option value="">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>{formatCategory(category)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="button"
+                className="complaint-clear-filters"
+                onClick={clearFilters}
+                disabled={!hasActiveFilters}
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+
           {loading && (
             <div className="dashboard-state">
               <p>Loading your complaints...</p>
@@ -256,9 +370,19 @@ export default function Dashboard() {
             </div>
           )}
 
-          {!loading && !error && complaints.length > 0 && (
+          {!loading && !error && complaints.length > 0 && filteredComplaints.length === 0 && (
+            <div className="dashboard-state dashboard-empty">
+              <h3>No matching complaints</h3>
+              <p>Try adjusting your search or filters.</p>
+              <button type="button" className="dashboard-retry" onClick={clearFilters}>
+                Clear filters
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && filteredComplaints.length > 0 && (
             <div className="complaints-list">
-              {complaints.map((complaint) => {
+              {filteredComplaints.map((complaint) => {
                 const title =
                   complaint.title ||
                   complaint.complaint_title ||
