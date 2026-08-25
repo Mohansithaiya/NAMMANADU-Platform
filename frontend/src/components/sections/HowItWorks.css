@@ -1,77 +1,65 @@
-/* ============================================================
-   HowItWorks Section
-   ============================================================ */
-
 .how-it-works {
+  position: relative;
   background: var(--bg-primary);
-  position: relative;
 }
 
-/* ── Steps container ── */
 .how-it-works__steps {
-  display: grid;
-  grid-template-columns: 1fr;   /* mobile: vertical stack */
-  gap: var(--space-6);
   position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
 }
 
-/* ── Individual step ── */
 .how-it-works__step {
   position: relative;
-  display: flex;
-  flex-direction: column;       /* mobile: top-down layout */
+  display: grid;
+  grid-template-columns: auto 1fr;
   gap: var(--space-4);
-  padding: var(--space-6);
-  background: var(--bg-card);
+  align-items: start;
+  padding: var(--space-5);
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.56);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  transition:
-    border-color var(--transition-slow),
-    box-shadow var(--transition-slow);
-  overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
-.how-it-works__step:hover {
+.how-it-works__step:hover,
+.how-it-works__step:focus-within {
   border-color: var(--border-gold);
   box-shadow: var(--shadow-md), var(--shadow-gold-sm);
+  transform: translateY(-3px);
 }
 
-/* Step number (top-right badge) */
 .how-it-works__step-number {
   position: absolute;
-  top: var(--space-5);
+  top: var(--space-4);
   right: var(--space-5);
+  color: rgba(245, 158, 11, 0.1);
   font-size: 2.5rem;
   font-weight: 800;
-  color: rgba(245, 158, 11, 0.08);
   letter-spacing: -0.04em;
   line-height: 1;
   pointer-events: none;
   user-select: none;
 }
 
-/* ── Icon ── */
 .how-it-works__icon-wrap {
-  width: 52px;
-  height: 52px;
-  background: var(--gold-glow-xs);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
   border: 1px solid var(--border-gold-sm);
   border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background-color var(--transition-slow), border-color var(--transition-slow);
-}
-
-.how-it-works__step:hover .how-it-works__icon-wrap {
-  background: var(--gold-glow-sm);
-  border-color: var(--border-gold);
+  background: var(--gold-glow-xs);
 }
 
 .how-it-works__icon {
-  width: 26px;
-  height: 26px;
+  width: 25px;
+  height: 25px;
   color: var(--gold-400);
 }
 
@@ -80,74 +68,89 @@
   height: 100%;
 }
 
-/* ── Text ── */
 .how-it-works__text {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  padding-right: var(--space-8);
+}
+
+.how-it-works__status {
+  color: var(--text-gold);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .how-it-works__step-title {
-  font-size: 1.1rem;
-  font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.01em;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 .how-it-works__step-desc {
-  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.72;
+  font-size: 0.88rem;
+  line-height: 1.7;
 }
 
-/* Connector line (mobile: horizontal bar at bottom) */
 .how-it-works__connector {
-  display: none; /* shown on desktop */
+  display: none;
 }
 
-/* ── Step color accents ── */
-.step-color-1 .how-it-works__icon { color: #F59E0B; }
-.step-color-2 .how-it-works__icon { color: #60A5FA; }
-.step-color-3 .how-it-works__icon { color: #34D399; }
-.step-color-4 .how-it-works__icon { color: #A78BFA; }
+.step-color-1 .how-it-works__icon { color: #f59e0b; }
+.step-color-2 .how-it-works__icon { color: #60a5fa; }
+.step-color-3 .how-it-works__icon { color: #34d399; }
+.step-color-4 .how-it-works__icon { color: #a78bfa; }
 
-.step-color-1 .how-it-works__icon-wrap { border-color: rgba(245, 158, 11, 0.20); }
-.step-color-2 .how-it-works__icon-wrap { border-color: rgba(96, 165, 250, 0.20); background: rgba(96, 165, 250, 0.06); }
-.step-color-3 .how-it-works__icon-wrap { border-color: rgba(52, 211, 153, 0.20); background: rgba(52, 211, 153, 0.06); }
-.step-color-4 .how-it-works__icon-wrap { border-color: rgba(167, 139, 250, 0.20); background: rgba(167, 139, 250, 0.06); }
+.step-color-2 .how-it-works__icon-wrap { border-color: rgba(96, 165, 250, 0.24); background: rgba(96, 165, 250, 0.06); }
+.step-color-3 .how-it-works__icon-wrap { border-color: rgba(52, 211, 153, 0.24); background: rgba(52, 211, 153, 0.06); }
+.step-color-4 .how-it-works__icon-wrap { border-color: rgba(167, 139, 250, 0.24); background: rgba(167, 139, 250, 0.06); }
 
-/* ── Bottom note ── */
 .how-it-works__note {
-  text-align: center;
-  margin-top: var(--space-10);
-  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  max-width: 60ch;
+  margin: var(--space-10) auto 0;
   color: var(--text-tertiary);
-  letter-spacing: 0.02em;
+  font-size: 0.88rem;
+  text-align: center;
 }
 
-/* ====================================================================
-   RESPONSIVE BREAKPOINTS
-==================================================================== */
+.how-it-works__note span {
+  color: var(--gold-400);
+}
 
-/* Tablet (640px): 2-column grid */
 @media (min-width: 640px) {
   .how-it-works__steps {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Desktop (1024px): 4-column horizontal timeline */
 @media (min-width: 1024px) {
   .how-it-works__steps {
     grid-template-columns: repeat(4, 1fr);
-    align-items: start;
     gap: var(--space-4);
   }
 
   .how-it-works__step {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: var(--space-8) var(--space-5);
+    min-height: 270px;
+    padding: var(--space-7) var(--space-5);
+    text-align: center;
+  }
+
+  .how-it-works__text {
+    align-items: center;
+    padding-right: 0;
   }
 
   .how-it-works__icon-wrap {
@@ -156,29 +159,18 @@
   }
 
   .how-it-works__icon {
-    width: 30px;
-    height: 30px;
+    width: 29px;
+    height: 29px;
   }
 
-  /* Horizontal connector between steps */
   .how-it-works__connector {
     display: block;
     position: absolute;
-    top: calc(var(--space-8) + 30px); /* aligns with icon center */
+    top: calc(var(--space-7) + 30px);
     right: calc(-1 * var(--space-4) / 2 - 1px);
     width: calc(var(--space-4) + 2px);
     height: 1px;
-    background: linear-gradient(90deg, var(--border-gold-sm), transparent);
     z-index: 1;
-  }
-
-  .how-it-works__step-title {
-    font-size: 1.05rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .how-it-works__steps {
-    gap: var(--space-5);
+    background: linear-gradient(90deg, var(--border-gold-sm), transparent);
   }
 }
