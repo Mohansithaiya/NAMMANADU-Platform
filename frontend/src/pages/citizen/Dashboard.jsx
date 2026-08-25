@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
@@ -59,13 +59,21 @@ const STATUS_FILTER_OPTIONS = [
   "rejected",
 ];
 
-const getComplaintStatus = (complaint) =>
-  String(complaint.status || complaint.complaint_status || "")
-    .toLowerCase()
-    .trim();
+const PAGE_SIZE = 10;
 
-const getComplaintTitle = (complaint) =>
-  complaint.title || complaint.complaint_title || "";
+const DEFAULT_PAGINATION = {
+  total: 0,
+  page: 1,
+  pages: 0,
+  limit: PAGE_SIZE,
+};
+
+const DEFAULT_STATISTICS = {
+  total: 0,
+  submitted: 0,
+  inProgress: 0,
+  resolved: 0,
+};
 
 const getStatusClass = (status) => {
   const normalized = String(status || "").toLowerCase().trim();
@@ -93,29 +101,83 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
 
   const [complaints, setComplaints] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
+  const [stats, setStats] = useState(DEFAULT_STATISTICS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [isSearchDebouncing, setIsSearchDebouncing] = useState(false);
+  const [page, setPage] = useState(1);
+  const activeRequestRef = useRef(null);
+
+  useEffect(() => {
+    const requestId = window.setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm.trim());
+      setIsSearchDebouncing(false);
+    }, 300);
+
+    return () => window.clearTimeout(requestId);
+  }, [searchTerm]);
 
   const fetchComplaints = useCallback(async () => {
+    activeRequestRef.current?.abort();
+    const controller = new AbortController();
+    activeRequestRef.current = controller;
+
     try {
       setLoading(true);
       setError("");
 
-      const response = await api.get("/complaints");
+      const response = await api.get("/complaints", {
+        signal: controller.signal,
+        params: {
+          page,
+          limit: PAGE_SIZE,
+          ...(debouncedSearchTerm ? { search: debouncedSearchTerm } : {}),
+          ...(statusFilter ? { status: statusFilter } : {}),
+          ...(categoryFilter ? { category: categoryFilter } : {}),
+        },
+      });
 
-      const responseData = response?.data;
+      const responseData = response?.data?.data || {};
+      const complaintList = Array.isArray(responseData.complaints)
+        ? responseData.complaints
+        : [];
+      const nextPagination = responseData.pagination || DEFAULT_PAGINATION;
+      const nextStatistics = responseData.statistics || DEFAULT_STATISTICS;
+      const resolvedPage = Number(nextPagination.page) || page;
+      const resolvedPages = Number(nextPagination.pages) || 0;
 
-      const complaintList =
-        responseData?.data?.complaints ||
-        responseData?.complaints ||
-        responseData?.items ||
-        (Array.isArray(responseData) ? responseData : []);
-
-      setComplaints(Array.isArray(complaintList) ? complaintList : []);
+      setComplaints(complaintList);
+      setPagination({
+        total: Number(nextPagination.total) || 0,
+        page: resolvedPage,
+        pages: resolvedPages,
+        limit: Number(nextPagination.limit) || PAGE_SIZE,
+      });
+      if (resolvedPage !== page) {
+        setPage(resolvedPage);
+      }
+      setCategories(
+        Array.isArray(responseData.categories)
+          ? responseData.categories.filter(Boolean)
+          : []
+      );
+      setStats({
+        total: Number(nextStatistics.total) || 0,
+        submitted: Number(nextStatistics.submitted) || 0,
+        inProgress: Number(nextStatistics.inProgress) || 0,
+        resolved: Number(nextStatistics.resolved) || 0,
+      });
     } catch (err) {
+      if (err?.code === "ERR_CANCELED" || err?.name === "CanceledError") {
+        return;
+      }
+
       console.error("Failed to fetch complaints:", err);
 
       setError(
@@ -123,103 +185,64 @@ export default function Dashboard() {
           "Unable to load your complaints. Please try again."
       );
     } finally {
-      setLoading(false);
+      if (activeRequestRef.current === controller) {
+        activeRequestRef.current = null;
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [categoryFilter, debouncedSearchTerm, page, statusFilter]);
 
   useEffect(() => {
+    if (isSearchDebouncing) return undefined;
+
     const requestId = window.setTimeout(() => {
       fetchComplaints();
     }, 0);
 
-    return () => window.clearTimeout(requestId);
-  }, [fetchComplaints]);
-
-  const stats = useMemo(() => {
-    const total = complaints.length;
-
-    const submitted = complaints.filter((complaint) => {
-      const status = String(
-        complaint.status || complaint.complaint_status || ""
-      )
-        .toLowerCase()
-        .trim();
-
-      return status === "submitted";
-    }).length;
-
-    const inProgress = complaints.filter((complaint) => {
-      const status = String(
-        complaint.status || complaint.complaint_status || ""
-      )
-        .toLowerCase()
-        .trim();
-
-      return (
-        status === "in_progress" ||
-        status === "in-progress" ||
-        status === "pending"
-      );
-    }).length;
-
-    const resolved = complaints.filter((complaint) => {
-      const status = String(
-        complaint.status || complaint.complaint_status || ""
-      )
-        .toLowerCase()
-        .trim();
-
-      return status === "resolved" || status === "closed";
-    }).length;
-
-    return {
-      total,
-      submitted,
-      inProgress,
-      resolved,
+    return () => {
+      window.clearTimeout(requestId);
+      activeRequestRef.current?.abort();
     };
-  }, [complaints]);
+  }, [fetchComplaints, isSearchDebouncing]);
 
-  const categories = useMemo(() => {
-    return Array.from(
-      new Set(
-        complaints
-          .map((complaint) => String(complaint.category || "").trim())
-          .filter(Boolean)
-      )
-    ).sort((first, second) => first.localeCompare(second));
-  }, [complaints]);
+  const normalizedSearchTerm = searchTerm.trim();
+  const hasActiveFilters = Boolean(
+    normalizedSearchTerm || statusFilter || categoryFilter
+  );
 
-  const filteredComplaints = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+  const updateSearchTerm = (value) => {
+    setSearchTerm(value);
+    setIsSearchDebouncing(true);
+    setPage(1);
+  };
 
-    return complaints.filter((complaint) => {
-      const searchableFields = [
-        complaint.tracking_id,
-        getComplaintTitle(complaint),
-        complaint.category,
-      ];
-      const matchesSearch =
-        !normalizedSearch ||
-        searchableFields.some((field) =>
-          String(field || "").toLowerCase().includes(normalizedSearch)
-        );
-      const matchesStatus =
-        !statusFilter || getComplaintStatus(complaint) === statusFilter;
-      const matchesCategory =
-        !categoryFilter ||
-        String(complaint.category || "").trim() === categoryFilter;
+  const updateStatusFilter = (value) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
 
-      return matchesSearch && matchesStatus && matchesCategory;
-    });
-  }, [categoryFilter, complaints, searchTerm, statusFilter]);
-
-  const hasActiveFilters = Boolean(searchTerm || statusFilter || categoryFilter);
+  const updateCategoryFilter = (value) => {
+    setCategoryFilter(value);
+    setPage(1);
+  };
 
   const clearFilters = () => {
     setSearchTerm("");
     setStatusFilter("");
     setCategoryFilter("");
+    setPage(1);
+  };
+
+  const goToPage = (nextPage) => {
+    if (
+      nextPage < 1 ||
+      nextPage > pagination.pages ||
+      nextPage === page
+    ) {
+      return;
+    }
+
+    setPage(nextPage);
   };
 
   return (
@@ -290,7 +313,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {!loading && !error && complaints.length > 0 && (
+          {!loading && !error && stats.total > 0 && (
             <div className="complaint-filters" aria-label="Search and filter complaints">
               <div className="complaint-search-field">
                 <label htmlFor="complaint-search">Search complaints</label>
@@ -298,7 +321,7 @@ export default function Dashboard() {
                   id="complaint-search"
                   type="search"
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
+                  onChange={(event) => updateSearchTerm(event.target.value)}
                   placeholder="Search by tracking ID, title, or category"
                 />
               </div>
@@ -308,7 +331,7 @@ export default function Dashboard() {
                 <select
                   id="complaint-status-filter"
                   value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value)}
+                  onChange={(event) => updateStatusFilter(event.target.value)}
                 >
                   <option value="">All statuses</option>
                   {STATUS_FILTER_OPTIONS.map((status) => (
@@ -322,7 +345,7 @@ export default function Dashboard() {
                 <select
                   id="complaint-category-filter"
                   value={categoryFilter}
-                  onChange={(event) => setCategoryFilter(event.target.value)}
+                  onChange={(event) => updateCategoryFilter(event.target.value)}
                 >
                   <option value="">All categories</option>
                   {categories.map((category) => (
@@ -361,7 +384,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {!loading && !error && complaints.length === 0 && (
+          {!loading && !error && stats.total === 0 && (
             <div className="dashboard-state dashboard-empty">
               <h3>No complaints yet</h3>
               <p>
@@ -370,7 +393,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {!loading && !error && complaints.length > 0 && filteredComplaints.length === 0 && (
+          {!loading && !error && hasActiveFilters && pagination.total === 0 && (
             <div className="dashboard-state dashboard-empty">
               <h3>No matching complaints</h3>
               <p>Try adjusting your search or filters.</p>
@@ -380,9 +403,9 @@ export default function Dashboard() {
             </div>
           )}
 
-          {!loading && !error && filteredComplaints.length > 0 && (
+          {!loading && !error && complaints.length > 0 && (
             <div className="complaints-list">
-              {filteredComplaints.map((complaint) => {
+              {complaints.map((complaint) => {
                 const title =
                   complaint.title ||
                   complaint.complaint_title ||
@@ -466,6 +489,36 @@ export default function Dashboard() {
                 );
               })}
             </div>
+          )}
+
+          {!loading && !error && pagination.pages > 1 && (
+            <nav className="complaint-pagination" aria-label="Complaint pages">
+              <span className="complaint-pagination-summary">
+                Showing {((pagination.page - 1) * pagination.limit) + 1}
+                –{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
+              </span>
+              <div className="complaint-pagination-actions">
+                <button
+                  type="button"
+                  className="complaint-pagination-button"
+                  onClick={() => goToPage(pagination.page - 1)}
+                  disabled={pagination.page <= 1 || loading}
+                >
+                  Previous
+                </button>
+                <span className="complaint-pagination-page">
+                  Page {pagination.page} of {pagination.pages}
+                </span>
+                <button
+                  type="button"
+                  className="complaint-pagination-button"
+                  onClick={() => goToPage(pagination.page + 1)}
+                  disabled={pagination.page >= pagination.pages || loading}
+                >
+                  Next
+                </button>
+              </div>
+            </nav>
           )}
         </section>
 
