@@ -1,5 +1,9 @@
 import Complaint from "../models/Complaint.js";
 import { AppError } from "../middleware/errorHandler.js";
+import {
+  deleteComplaintImage,
+  uploadComplaintImage,
+} from "../services/storage/cloudinary.js";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -36,6 +40,8 @@ const escapeRegex = (value) =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export const createComplaint = async (req, res, next) => {
+  const uploadedAttachments = [];
+
   try {
     const {
       title,
@@ -45,7 +51,6 @@ export const createComplaint = async (req, res, next) => {
       constituency,
       address,
       priority,
-      attachments,
     } = req.body;
 
     if (!title || !description || !category || !district) {
@@ -53,6 +58,15 @@ export const createComplaint = async (req, res, next) => {
         "Title, description, category and district are required",
         400
       );
+    }
+
+    for (const file of req.files || []) {
+      const uploadedAttachment = await uploadComplaintImage({
+        buffer: file.buffer,
+        mimetype: file.mimetype,
+        citizenId: req.user._id.toString(),
+      });
+      uploadedAttachments.push(uploadedAttachment);
     }
 
     const complaint = await Complaint.create({
@@ -65,7 +79,7 @@ export const createComplaint = async (req, res, next) => {
       constituency: constituency || "",
       address: address || "",
       priority: priority || "medium",
-      attachments: Array.isArray(attachments) ? attachments : [],
+      attachments: uploadedAttachments.map(({ url }) => url),
     });
 
     res.status(201).json({
@@ -74,6 +88,9 @@ export const createComplaint = async (req, res, next) => {
       data: { complaint },
     });
   } catch (error) {
+    await Promise.all(
+      uploadedAttachments.map(({ publicId }) => deleteComplaintImage({ publicId }))
+    );
     next(error);
   }
 };

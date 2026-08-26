@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
@@ -21,6 +21,18 @@ const PRIORITIES = [
   { value: "high", label: "High" },
   { value: "urgent", label: "Urgent" },
 ];
+
+const MAX_ATTACHMENTS = 5;
+const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
+
+const formatFileSize = (bytes) => `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+
 
 function getSubmissionError(error) {
   if (error.response?.status === 401) {
@@ -51,10 +63,72 @@ export default function FileComplaint() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [attachments, setAttachments] = useState([]);
+  const attachmentsRef = useRef([]);
+
+  useEffect(() => {
+    attachmentsRef.current = attachments;
+  }, [attachments]);
+
+  useEffect(() => {
+    return () => {
+      attachmentsRef.current.forEach((attachment) => {
+        URL.revokeObjectURL(attachment.previewUrl);
+      });
+    };
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((previous) => ({ ...previous, [name]: value }));
+    setError("");
+  };
+
+  const handleAttachmentChange = (event) => {
+    const selectedFiles = Array.from(event.target.files || []);
+    event.target.value = "";
+
+    if (!selectedFiles.length) return;
+
+    if (attachments.length + selectedFiles.length > MAX_ATTACHMENTS) {
+      setError(`You can attach up to ${MAX_ATTACHMENTS} images.`);
+      return;
+    }
+
+    const invalidFile = selectedFiles.find(
+      (file) =>
+        !ACCEPTED_IMAGE_TYPES.has(file.type) || file.size > MAX_ATTACHMENT_SIZE
+    );
+
+    if (invalidFile) {
+      setError(
+        `${invalidFile.name} must be a JPEG, PNG, WebP, or GIF image up to 5 MB.`
+      );
+      return;
+    }
+
+    const nextAttachments = selectedFiles.map((file) => ({
+      id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+
+    setAttachments((current) => [...current, ...nextAttachments]);
+    setError("");
+  };
+
+  const removeAttachment = (attachmentId) => {
+    const attachmentToRemove = attachments.find(
+      (attachment) => attachment.id === attachmentId
+    );
+
+    if (attachmentToRemove) {
+      URL.revokeObjectURL(attachmentToRemove.previewUrl);
+    }
+
+    setAttachments((current) =>
+      current.filter((attachment) => attachment.id !== attachmentId)
+    );
     setError("");
   };
 
@@ -86,13 +160,25 @@ export default function FileComplaint() {
       return;
     }
 
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    attachments.forEach(({ file }) => {
+      formData.append("attachments", file);
+    });
+
     setSubmitting(true);
     try {
-      const response = await api.post("/complaints", payload);
+      const response = await api.post("/complaints", formData);
       setSuccess({
         message: response.data?.message || "Complaint submitted successfully.",
         trackingId: getTrackingId(response),
       });
+      attachments.forEach((attachment) => {
+        URL.revokeObjectURL(attachment.previewUrl);
+      });
+      setAttachments([]);
       setForm((previous) => ({
         ...previous,
         title: "",
@@ -259,6 +345,53 @@ export default function FileComplaint() {
               onChange={handleChange}
               placeholder="Street, locality, or nearby landmark"
             />
+          </div>
+
+          <div className="complaint-attachments-field">
+            <div className="complaint-attachments-heading">
+              <div>
+                <label htmlFor="complaint-attachments">Photos or evidence</label>
+                <p>Optional. Add up to 5 images, 5 MB each.</p>
+              </div>
+              <span>{attachments.length}/{MAX_ATTACHMENTS}</span>
+            </div>
+            <input
+              id="complaint-attachments"
+              className="complaint-attachments-input"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              capture="environment"
+              multiple
+              onChange={handleAttachmentChange}
+              disabled={submitting || attachments.length >= MAX_ATTACHMENTS}
+            />
+            <label htmlFor="complaint-attachments" className="complaint-attachments-picker">
+              <span aria-hidden="true">＋</span>
+              <span>{attachments.length ? "Add more photos" : "Choose photos or take a photo"}</span>
+            </label>
+
+            {attachments.length > 0 && (
+              <div className="complaint-attachment-previews" aria-label="Selected complaint photos">
+                {attachments.map((attachment) => (
+                  <figure key={attachment.id} className="complaint-attachment-preview">
+                    <img src={attachment.previewUrl} alt={`Selected evidence: ${attachment.file.name}`} />
+                    <figcaption>
+                      <span title={attachment.file.name}>{attachment.file.name}</span>
+                      <small>{formatFileSize(attachment.file.size)}</small>
+                    </figcaption>
+                    <button
+                      type="button"
+                      className="complaint-attachment-remove"
+                      onClick={() => removeAttachment(attachment.id)}
+                      disabled={submitting}
+                      aria-label={`Remove ${attachment.file.name}`}
+                    >
+                      Remove
+                    </button>
+                  </figure>
+                ))}
+              </div>
+            )}
           </div>
 
           <p className="complaint-form-note">

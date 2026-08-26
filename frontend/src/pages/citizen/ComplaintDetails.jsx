@@ -66,6 +66,21 @@ const getAssignedLabel = (assignedTo) => {
   );
 };
 
+const getSafeAttachmentUrl = (attachment) => {
+  if (typeof attachment !== "string" || !attachment.trim()) return "";
+
+  try {
+    const parsedUrl = new URL(attachment.trim(), window.location.origin);
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      return "";
+    }
+
+    return parsedUrl.href;
+  } catch {
+    return "";
+  }
+};
+
 const getErrorMessage = (error) => {
   if (error.response?.status === 401) {
     return "Your session has expired. Please sign in again.";
@@ -119,6 +134,12 @@ export default function ComplaintDetails() {
   const currentStatus = complaint?.status || "submitted";
   const currentStep = useMemo(() => STATUS_STEPS.indexOf(currentStatus), [currentStatus]);
   const isRejected = currentStatus === "rejected";
+  const attachmentUrls = (Array.isArray(complaint?.attachments)
+    ? complaint.attachments
+    : []
+  )
+    .map(getSafeAttachmentUrl)
+    .filter(Boolean);
 
   return (
     <div className="dashboard-page complaint-details-page">
@@ -243,6 +264,33 @@ export default function ComplaintDetails() {
               <p className="complaint-details-eyebrow">Citizen description</p>
               <h2>Description</h2>
               <p>{complaint.description || "No description provided."}</p>
+            </section>
+
+            <section className="complaint-details-section complaint-attachments-section">
+              <p className="complaint-details-eyebrow">Supporting evidence</p>
+              <h2>Photos and attachments</h2>
+              {attachmentUrls.length > 0 ? (
+                <div className="complaint-attachments-gallery" aria-label="Complaint evidence">
+                  {attachmentUrls.map((attachmentUrl, index) => (
+                    <a
+                      key={attachmentUrl}
+                      className="complaint-attachment-link"
+                      href={attachmentUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img
+                        src={attachmentUrl}
+                        alt={`Complaint evidence ${index + 1}`}
+                        loading="lazy"
+                      />
+                      <span>Open image {index + 1}</span>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p className="complaint-no-attachments">No photos or attachments were provided.</p>
+              )}
             </section>
 
             <section className="complaint-details-section">
