@@ -59,3 +59,22 @@ Assigned
 In Progress
     ↓
 Resolved
+
+---
+
+## 🎥 Project Demo
+
+Watch the complete NAMMANADU platform walkthrough, including:
+
+- User registration and login
+- Citizen dashboard
+- Complaint creation
+- Complaint details and submission
+- Complaint tracking
+- Overall web application flow
+
+👉 **[Watch the 2-Minute Project Demo](https://drive.google.com/file/d/1A7ZN4pO02bmKIiHWnH4Qnq63GvULh1SK/view?usp=sharing)**
+
+> The demo video provides a quick overview of the current working application and its citizen complaint workflow.
+
+---
