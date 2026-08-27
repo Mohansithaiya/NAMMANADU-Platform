@@ -73,7 +73,7 @@ Watch the complete NAMMANADU platform walkthrough, including:
 - Complaint tracking
 - Overall web application flow
 
-👉 **[Watch the 2-Minute Project Demo](https://drive.google.com/file/d/1A7ZN4p002bmKIiHWnH4Qnq63GvULh1SK/view?usp=sharing)**
+👉 **[Watch the 2-Minute Project Demo]( https://drive.google.com/file/d/1A7ZN4pO02bmKIiHWnH4Qnq63GvULh1SK/view?usp=sharing )**
 
 > The demo video provides a quick overview of the current working application and its citizen complaint workflow.
 
