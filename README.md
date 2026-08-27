@@ -1,10 +1,10 @@
-# 🇮🇳 NAMMANADU Platform
+# NAMMANADU Platform
 
 > **AI-powered citizen governance platform for smarter public services, complaint management, emergency response, and digital governance.**
 
 NAMMANADU is a full-stack civic technology platform designed to make it easier for citizens to interact with public services, report civic issues, track complaints, and access government-related assistance through a modern digital interface.
 
-The platform focuses on building a transparent and accessible bridge between **citizens, government services, and digital governance systems**.
+The platform focuses on building a transparent and accessible bridge between **citizens, government services, and digital governance systems.**
 
 ---
 
