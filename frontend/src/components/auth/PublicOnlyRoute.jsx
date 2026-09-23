@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getDashboardPath } from "../../utils/dashboardRoutes";
 
-export default function ProtectedRoute({ children, allowedRoles }) {
+export default function PublicOnlyRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -20,14 +20,12 @@ export default function ProtectedRoute({ children, allowedRoles }) {
         role="status"
         aria-live="polite"
       >
-        Loading...
+        Checking your session...
       </div>
     );
   }
 
-  if (!user) return <Navigate to="/login" replace />;
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (user) {
     return <Navigate to={getDashboardPath(user.role)} replace />;
   }
 

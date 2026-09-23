@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
+import complaintRoutes from "./routes/complaints.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
@@ -26,7 +27,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-
+app.use("/api/complaints", complaintRoutes);
 app.use(errorHandler);
 
 connectDB().then(() => {

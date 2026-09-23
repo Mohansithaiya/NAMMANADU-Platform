@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getDashboardPath } from "../../utils/dashboardRoutes";
 import "./Auth.css";
+
+function getLoginError(error) {
+  if (error.response?.data?.message) return error.response.data.message;
+  if (error.request) return "Unable to reach NAMMANADU. Please check your connection and try again.";
+  return "Login failed. Please try again.";
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,21 +18,26 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const user = await login(email, password);
-      const dashboards = {
-        citizen: "/citizen/dashboard",
-        admin: "/admin/dashboard",
-        worker: "/worker/dashboard",
-        superadmin: "/superadmin/dashboard",
-      };
-      navigate(dashboards[user.role] || "/citizen/dashboard");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      const user = await login(normalizedEmail, password);
+      navigate(getDashboardPath(user.role), { replace: true });
+    } catch (requestError) {
+      setError(getLoginError(requestError));
     } finally {
       setSubmitting(false);
     }
@@ -40,10 +52,10 @@ export default function Login() {
           <p className="auth-tagline">நம்ம நாடு — Smart Citizen Platform</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
           <h2>Sign In</h2>
 
-          {error && <div className="auth-error">{error}</div>}
+          {error && <div className="auth-error" role="alert">{error}</div>}
 
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -51,8 +63,9 @@ export default function Login() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
+              autoComplete="email"
               required
             />
           </div>
@@ -63,8 +76,9 @@ export default function Login() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter your password"
+              autoComplete="current-password"
               required
             />
           </div>

@@ -1,0 +1,317 @@
+.complaint-page {
+  align-items: flex-start;
+  padding: clamp(2rem, 6vw, 5rem) var(--space-5);
+}
+
+.complaint-form-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.complaint-form-heading h2 {
+  margin-bottom: 0;
+}
+
+.complaint-form-eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--gold-300);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.complaint-dashboard-link {
+  flex-shrink: 0;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.complaint-dashboard-link:hover {
+  border-color: var(--border-gold-sm);
+  color: var(--text-gold);
+  background: var(--gold-glow-sm);
+}
+
+.complaint-form .form-group {
+  position: relative;
+}
+
+.complaint-form .form-group textarea {
+  width: 100%;
+  min-height: 9rem;
+  padding: 0.7rem 0.9rem;
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.complaint-form .form-group textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.complaint-form .form-group textarea:focus {
+  outline: none;
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 3px var(--gold-glow-sm);
+}
+
+.complaint-character-count {
+  align-self: flex-end;
+  margin-top: -0.4rem;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+}
+
+.complaint-form-note {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--text-tertiary);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.complaint-success-card {
+  max-width: 560px;
+}
+
+.complaint-success {
+  text-align: center;
+}
+
+.complaint-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin-bottom: var(--space-4);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: 50%;
+  color: #86EFAC;
+  background: rgba(34, 197, 94, 0.12);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.complaint-success h2 {
+  margin-bottom: var(--space-2);
+  font-size: 1.25rem;
+}
+
+.complaint-success > p {
+  color: var(--text-tertiary);
+}
+
+.complaint-tracking-result {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--border-gold-sm);
+  border-radius: var(--radius-sm);
+  color: var(--text-gold) !important;
+  background: var(--gold-glow-sm);
+  font-size: 0.9rem;
+}
+
+.complaint-tracking-result strong {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.04em;
+}
+
+.complaint-success-actions {
+  margin-top: var(--space-6);
+}
+
+.complaint-action-primary {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .complaint-page {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .complaint-form-heading {
+    flex-direction: column;
+  }
+
+  .complaint-dashboard-link {
+    align-self: flex-start;
+  }
+}
+
+
+/* ── Complaint attachments ── */
+.complaint-attachments-field {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.complaint-attachments-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.complaint-attachments-heading label {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.complaint-attachments-heading p {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 0.76rem;
+}
+
+.complaint-attachments-heading > span {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.complaint-attachments-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.complaint-attachments-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px dashed var(--border-gold-sm);
+  border-radius: var(--radius-sm);
+  color: var(--text-gold);
+  background: var(--gold-glow-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.complaint-attachments-picker:hover {
+  border-color: var(--gold-400);
+  background: var(--gold-glow-md);
+}
+
+.complaint-attachments-input:focus-visible + .complaint-attachments-picker {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 3px;
+}
+
+.complaint-attachments-input:disabled + .complaint-attachments-picker {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.complaint-attachments-picker > span:first-child {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.complaint-attachment-previews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.complaint-attachment-preview {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.complaint-attachment-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.complaint-attachment-preview figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.55rem 0.6rem 0.4rem;
+}
+
+.complaint-attachment-preview figcaption span {
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.complaint-attachment-preview figcaption small {
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+}
+
+.complaint-attachment-remove {
+  width: calc(100% - 1.2rem);
+  margin: 0 0.6rem 0.6rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm);
+  color: #FCA5A5;
+  background: rgba(239, 68, 68, 0.08);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.complaint-attachment-remove:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+.complaint-attachment-remove:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 480px) {
+  .complaint-attachments-field {
+    padding: var(--space-3);
+  }
+
+  .complaint-attachment-previews {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
